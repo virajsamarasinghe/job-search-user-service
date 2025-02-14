@@ -4,6 +4,7 @@ import com.jobsearch.user_service.entity.User;
 import com.jobsearch.user_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.jobsearch.user_service.dto.UserDto;
@@ -60,6 +61,19 @@ public class UserController {
     @PostConstruct
     public void initRoleAndUser() {
         userService.initRoleAndUser();
+    }
+
+    @GetMapping("/for-admin")
+    @PreAuthorize("hasRole('Admin')")
+    public String getAllUsers() {
+        return "All users";
+    }
+
+
+    @GetMapping("/for-user")
+    @PreAuthorize("hasAnyRole('User','Admin')")
+    public String forUser(){
+        return "User-role";
     }
 
 }
